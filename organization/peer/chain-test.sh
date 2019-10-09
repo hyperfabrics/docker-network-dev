@@ -33,6 +33,7 @@ case $OPERATION in
               peer chaincode list --installed -C $CC_CHANNEL_ID
         ;;
     "instantiate")
+	      npm run --prefix $CC_PATH
               peer chaincode instantiate -C $CC_CHANNEL_ID -n $CC_NAME  -v $CC_VERSION -c $CC_CONSTRUCTOR  -o $ORDERER_ADDRESS
 
               #peer chaincode list --instantiated -C $CC_CHANNEL_ID
