@@ -4,21 +4,30 @@ services:
   fabric-ca-server:
    image: hyperledger/fabric-ca:1.4.1
    container_name: caserver.papernet.hyperfabrics.com
-   ports:
-    - "7054:7054"
-    - "9443:9443"
    environment:
     - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
     - FABRIC_CA_SERVER_CA_NAME=caserver.papernet.hyperfabrics.com
     - FABRIC_CA_SERVER_CSR_CN=caserver-papernetnet-hyperfabrics
+    - FABRIC_CA_KEYFILE=./ca/key.pem
+    - FABRIC_CA_CERTFILE=./ca/cert.pem
+    - FABRIC_CA_CHAINFILE=./ca/cert.pem
     - FABRIC_CA_SERVER_PORT=7054
     - FABRIC_CA_SERVER_DEBUG=true
+    - FABRIC_CA_CSR_NAMES_C= CA
+    - FABRIC_CA_CSR_NAMES_ST= "Onatrio"
+    - FABRIC_CA_CSR_NAMES_L= "Toronto"
+    - FABRIC_CA_CSR_NAMES_O="hyperfabrics"
+    - FABRIC_CA_BCSSP_SW_FILEKEYSTORE_KEYSTORE=/etc/hyperledger/fabric-ca-server-config/msp/keystore
     - FABRIC_CA_SERVER_TLS_ENABLED=false
-    - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
-    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/prtivate.key
+    - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/tls/ca-cert.pem
+    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/tls/prtivate.key
     - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=127.0.0.1:9443
    working_dir: /etc/hyperledger/fabric-ca-server
    command: /bin/bash -c 'fabric-ca-server start -b admin:adminpw'
    volumes:
-     - "./fabric-ca-server:/etc/hyperledger/fabric-ca-server"
+     - "./fabric-ca-server/:/etc/hyperledger/fabric-ca-server-config"
+   ports:
+    - "7054:7054"
+    - "9443:9443"
+
 
