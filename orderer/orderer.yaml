@@ -1,4 +1,7 @@
-orderer:
+version: '2'
+
+services:
+  orderer:
     image: hyperledger/fabric-orderer:1.4.1
     container_name: orderer.papernet.hyperfabrics.com
     tty: true
@@ -21,7 +24,7 @@ orderer:
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/msp/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/msp/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderer
-    # command: orderer
+    command: orderer
     volumes:
       -  /var/run/:/host/var/run/
       - ./msps/orderer/msp:/var/hyperledger/msp
