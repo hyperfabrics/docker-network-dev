@@ -20,7 +20,8 @@ services:
     - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server/tls/prtivate.key
     - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=127.0.0.1:9443
    working_dir: /etc/hyperledger/fabric-ca-server
-   command: sh -c 'fabric-ca-server start -b admin:adminpw '
+   #command: sh -c 'fabric-ca-server start -b admin:adminpw '
+   command: sh -c 'fabric-ca-server start -b caclient.papernet.hyperfabrics.com:adminpw '
   # volumes:
    #  - "./fabric-ca-server/:/etc/hyperledger/fabric-ca-server"
    ports:

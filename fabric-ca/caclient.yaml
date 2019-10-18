@@ -20,7 +20,7 @@ services:
     - FABRIC_CA_CLIENT_TLS_CERTFILE=/etc/hyperledger/fabric-ca-client/tls/ca-cert.pem
     - FABRIC_CA_CLIENT_TLS_KEYFILE=/etc/hyperledger/fabric-ca-client/tls/prtivate.key
    working_dir: /etc/hyperledger/fabric-ca-client
-  # command: sh -c 'fabric-ca-client enroll -u http://admin:adminpw@caserver.papernet.hyperfabrics.com:7054'
+   command: sh -c 'fabric-ca-client enroll -u http://caclient.papernet.hyperfabrics.com:adminpw@caserver.papernet.hyperfabrics.com:7054'
   # volumes:
   #   - "./fabric-ca-client/:/etc/hyperledger/fabric-ca-client"
    ports:
