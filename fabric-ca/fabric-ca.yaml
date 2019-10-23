@@ -23,7 +23,7 @@ services:
     - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server/tls/prtivate.key
     - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=127.0.0.1:9443
    working_dir: /etc/hyperledger/fabric-ca-server
-   command: fabric-ca-server start -b caclient.papernet.hyperfabrics.com:adminpw 
+   command: /bin/bash -c 'fabric-ca-server start -b caclient.papernet.hyperfabrics.com:adminpw' 
    ports:
     - "7054:7054"
     - "9443:9443"
@@ -32,28 +32,45 @@ services:
    image: hyperledger/fabric-ca:1.4.1
    container_name: caclient.papernet.hyperfabrics.com
    restart: always
-   tty: true
    environment:
     - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/fabric-ca-client
     - FABRIC_CA_CLIENT_CSR_CN=caclient.papernet.hyperfabrics.com
     - FABRIC_CA_CLIENT_URL=http://caserver.papernet.hyperfabrics.com:7054
     - FABRIC_CA_CLIENT_CANAME=caserver.papernet.hyperfabrics.com
+    - FABRIC_CA_BCSSP_SW_FILEKEYSTORE_KEYSTORE=/etc/hyperledger/fabric-ca-client/msp/keystore
+    - FABRIC_CA_CLIENT_TLS_ENABLED=false
+    - FABRIC_CA_CLIENT_TLS_CERTFILE=/etc/hyperledger/fabric-ca-client/tls/ca-cert.pem
+    - FABRIC_CA_CLIENT_TLS_KEYFILE=/etc/hyperledger/fabric-ca-client/tls/prtivate.key
     - FABRIC_CA_CLIENT_MSPDIR=/etc/hyperledger/fabric-ca-client/msp
     - FABRIC_CA_KEYFILE=/etc/hyperledger/fabric-ca-client/msp/key.pem
     - FABRIC_CA_CERTFILE=/etc/hyperledger/fabric-ca-client/msp/cert.pem
     - FABRIC_CA_CHAINFILE=/etc/hyperledger/fabric-ca-client/msp/cert.pem
     - FABRIC_CA_SERVER_PORT=7055
-    - FABRIC_CA_BCSSP_SW_FILEKEYSTORE_KEYSTORE=/etc/hyperledger/fabric-ca-client/msp/keystore
-    - FABRIC_CA_CLIENT_TLS_ENABLED=false
-    - FABRIC_CA_CLIENT_TLS_CERTFILE=/etc/hyperledger/fabric-ca-client/tls/ca-cert.pem
-    - FABRIC_CA_CLIENT_TLS_KEYFILE=/etc/hyperledger/fabric-ca-client/tls/prtivate.key
+    - FABRIC_CA_SERVER_TLS_ENABLED=false
+    - FABRIC_CA_SERVER_VERSION=1.4.1
    working_dir: /etc/hyperledger/fabric-ca-client
-   command: fabric-ca-client enroll -u http://caclient.papernet.hyperfabrics.com:adminpw@caserver.papernet.hyperfabrics.com:7054 --id.affiliation papernet 
-         --id.attrs 'admin=true:ecert,hf.Registrar.Roles=*,hf.Registrar.DelegateRoles=*,hf.Revoker=true,hf.IntermediateCA=true,hf.GenCRL=true,hf.Registrar.Attributes=*,hf.AffiliationMgr=true'
+   command: /bin/bash -c 'fabric-ca-client enroll -u http://caclient.papernet.hyperfabrics.com:adminpw@caserver.papernet.hyperfabrics.com:7054  --id.affiliation papernet  --id.attrs admin=true:ecert,hf.Registrar.Roles=*,hf.Registrar.DelegateRoles=*,hf.Revoker=true,hf.IntermediateCA=true,hf.GenCRL=true,hf.Registrar.Attributes=*,hf.AffiliationMgr=true && sleep 60000000'
+   volumes:
+      - ./msps:/etc/hyperledger/fabric-ca-client/msps
    ports:
     - "7055:7055"
    depends_on:
     - fabric-ca-server
+  
+  apache:
+   image: httpd:latest
+   container_name: msphost.papernet.hyperfabrics.com
+   restart: always
+   environment:
+    - APACHE_SERVER_NAME=msphost.papernet.hyperfabrics.com
+    - APACHE_LOG_LEVEL=info
+   working_dir: /usr/local/apache2
+   volumes:
+      - ./msps:/usr/local/apache2/htdocs
+   ports:
+    - "8080:80"
+   depends_on:
+    - fabric-ca-client
 
 
 # Adding affiliations:
@@ -62,5 +79,5 @@ services:
 # export FABRIC_CA_CLIENT_HOME=/etc/hyperledger/fabric-ca-client/clients/digibank/digibank-peer1
 # fabric-ca-client register --id.name peer0.digibank.hyperfabrics.com --id.affiliation digibank.commercialpaper --id.type peer
 # ‘hf.Registrar.Roles=peer,client’
-  
-  
+#fabric-ca-client register -d --id.name peer1-org1 --id.secret peer1PW --id.type peer -u https://0.0.0.0:7052
+
