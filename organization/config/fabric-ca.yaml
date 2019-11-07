@@ -1,9 +1,9 @@
 version: '2'
 
 services:
-fabric-ca-client:
+ fabric-ca-client:
    image: hyperledger/fabric-ca:1.4.1
-   container_name: caclient.digibank.hyperfabrics.com
+   container_name: ca.digibank.hyperfabrics.com
    restart: always
    environment:
     - FABRIC_CA_CLIENT_HOME=/etc/hyperledger/fabric-ca-client
@@ -22,10 +22,8 @@ fabric-ca-client:
     - FABRIC_CA_SERVER_TLS_ENABLED=false
     - FABRIC_CA_SERVER_VERSION=1.4.1
    working_dir: /etc/hyperledger/fabric-ca-client
-   command: /bin/bash -c 'fabric-ca-client enroll -u http://caclient.digibank.hyperfabrics.com:adminpw@caserver.digibank.hyperfabrics.com:7054  --id.affiliation digibank  --id.attrs admin=true:ecert,hf.Registrar.Roles=*,hf.Registrar.DelegateRoles=*,hf.Revoker=true,hf.IntermediateCA=true,hf.GenCRL=true,hf.Registrar.Attributes=*,hf.AffiliationMgr=true && sleep 60000000'
-   volumes:
-      - ./msps:/etc/hyperledger/fabric-ca-client/msps
+   #command: /bin/bash -c 'fabric-ca-client enroll -u http://ca.digibank.hyperfabrics.com:Digibankpw@caclient.papernet.hyperfabrics.com:7055  --id.affiliation digibank  --id.attrs admin=true:ecert,hf.Registrar.Roles=*,hf.Registrar.DelegateRoles=*,hf.Revoker=true,hf.IntermediateCA=true,hf.GenCRL=true,hf.Registrar.Attributes=*,hf.AffiliationMgr=t && sleep 60000000'
+   #volumes:
+    #  - ./msps:/etc/hyperledger/fabric-ca-client/msps
    ports:
-    - "7055:7055"
-   depends_on:
-    - fabric-ca-server
+    - "7056:7055"
