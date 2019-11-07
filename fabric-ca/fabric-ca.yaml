@@ -80,8 +80,12 @@ services:
 # fabric-ca-client register --id.type peer --id.name peer0.digibank.hyperfabrics.com --id.affiliation digibank.commercialpaper 
 # ‘hf.Registrar.Roles=peer,client’
 
-# Enrolling a ca for org
+
+# Enrolling ca for org
+# fabric-ca-client enroll -u http://ca.digibank.papernet.hyperfabrics.com:digibankpw@$FABRIC_CA_CLIENT_URL
+
+# Registering  ca for org
 # fabric-ca-client affiliation add digibank
-# export FABRIC_CA_CLIENT_HOME=/etc/hyperledger/fabric-ca-client/clients/digibank/ca
+# export FABRIC_CA_CLIENT_HOME=/etc/hyperledger/fabric-ca-client/msps/digibank/ca
 # fabric-ca-client register --id.name ca.digibank.papernet.hyperfabrics.com --id.secret=digibankpw --id.affiliation digibank --id.type=client  --id.attrs 'admin=true:ecert, hf.Registrar.Roles=*, hf.Registrar.DelegateRoles=*hf.Revoker=true, hf.IntermidiateCA=true, hf.GenCRL=true, hf.Registrar.Attributes=*, hf.AffiliationMgr=false'
 # export FABRIC_CA_CLIENT_HOME=/etc/hyperledger/fabric-ca-client
